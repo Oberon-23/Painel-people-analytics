@@ -16,11 +16,17 @@ function pool(): Pool {
     const url = process.env.DATABASE_URL;
     if (!url) throw new Error('DATABASE_URL não configurada');
     const local = /@(localhost|127\.0\.0\.1)[:/]/.test(url);
+    // o TLS é configurado aqui, não pela URL (sslmode na URL sobrescreveria isto)
+    const u = new URL(url);
+    for (const k of ['sslmode', 'sslrootcert', 'sslcert', 'sslkey', 'ssl']) u.searchParams.delete(k);
+    // Supabase assina o certificado do banco com uma CA própria: cole o
+    // certificado dela em DATABASE_CA para a conexão continuar verificada.
+    const ca = process.env.DATABASE_CA?.replace(/\\n/g, '\n');
     globalThis.__pool = new Pool({
-      connectionString: url,
+      connectionString: u.toString(),
       max: 4,
       idleTimeoutMillis: 10_000,
-      ssl: local ? false : { rejectUnauthorized: true },
+      ssl: local ? false : ca ? { ca, rejectUnauthorized: true } : { rejectUnauthorized: true },
     });
   }
   return globalThis.__pool;

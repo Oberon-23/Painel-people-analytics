@@ -81,7 +81,7 @@ Um agendamento da Vercel (`vercel.json`) chama `/api/cron` todo dia às 6h (hor�
 - Gráficos em **SVG próprio**, desenhados no servidor
 - **Vitest**: 19 testes de segurança rodando contra um Postgres real
 - **GitHub Actions**: sobe um Postgres, instala o banco e roda tipos, testes e build
-- Deploy: **Vercel** + **Neon** (Postgres gerenciado, plano gratuito)
+- Deploy: **Vercel** + **Supabase** (Postgres gerenciado, plano gratuito), com conexão TLS verificada
 
 ## Estrutura
 
@@ -105,7 +105,7 @@ tests/                testes de segurança
 
 ## Como rodar
 
-Publicar na internet: veja [docs/PUBLICAR.md](docs/PUBLICAR.md) (Neon + Vercel, cerca de 15 minutos).
+Publicar na internet: veja [docs/PUBLICAR.md](docs/PUBLICAR.md) (Supabase + Vercel, cerca de 15 minutos).
 
 Localmente, com um PostgreSQL 16:
 

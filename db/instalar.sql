@@ -12,6 +12,10 @@
 --   api         a única "porta" que o aplicativo usa: views e funções
 -- =====================================================================
 
+-- No Supabase, o pgcrypto fica no esquema "extensions"; no Neon e no
+-- Postgres comum, em "public". Assim funciona nos dois.
+set search_path = public, extensions, pg_catalog;
+
 create extension if not exists pgcrypto;
 
 create schema if not exists rh;
