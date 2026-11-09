@@ -145,7 +145,7 @@ main { max-width: 1240px; margin: 0 auto; padding: 26px 20px 60px; display: grid
 
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
 .kpi { padding: 14px 16px; display: grid; gap: 2px; align-content: start; }
-.kpi .rot { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.kpi .rot { font-size: 13px; color: var(--muted); line-height: 1.35; min-height: 2.7em; }
 .kpi .val { font-size: 27px; font-weight: 680; letter-spacing: -.02em; }
 .kpi .det { font-size: 12.5px; color: var(--ink-2); }
 .kpi .det .sobe-ruim, .sobe-ruim { color: var(--bad); }
@@ -183,8 +183,13 @@ td .fraco { color: var(--muted); font-size: 12.5px; display: block; }
 .calor-b2 { background: color-mix(in srgb, var(--good) 24%, transparent); }
 
 /* ---------- gráficos ---------- */
-.graf { width: 100%; height: auto; overflow: visible; }
-.graf text { fill: var(--muted); font-size: 11px; }
+.graf-box { width: 100%; min-width: 0; }
+.graf { display: block; max-width: 100%; height: auto; overflow: visible; }
+.graf text { fill: var(--muted); font-size: 12px; }
+.graf .rot-cat, .graf .rot-val { fill: var(--ink-2); }
+.graf .rot-ref { fill: var(--ink-2); font-size: 11.5px; font-weight: 600; }
+.graf .rot-faixa { fill: var(--warn); font-size: 11.5px; font-weight: 600; }
+.graf .halo { paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
 .graf .eixo { stroke: var(--line-2); }
 .graf .grade-l { stroke: var(--line); }
 .graf .s1 { fill: var(--c1); }
@@ -195,7 +200,7 @@ td .fraco { color: var(--muted); font-size: 12.5px; display: block; }
 .graf .ref { stroke: var(--ink-2); stroke-dasharray: 4 4; stroke-width: 1.2; }
 .graf .area1 { fill: var(--c1); opacity: .08; }
 .graf .rot-forte { fill: var(--ink); font-weight: 600; }
-.graf .faixa-tend { fill: var(--warn); opacity: .07; }
+.graf .faixa-tend { fill: var(--warn); opacity: .08; }
 .graf .bar-bad { fill: var(--bad); }
 .graf .bar-n { fill: var(--c1); }
 .graf .bar-sup { fill: var(--lock-soft); stroke: var(--lock); stroke-dasharray: 3 3; }
@@ -210,6 +215,7 @@ td .fraco { color: var(--muted); font-size: 12.5px; display: block; }
 .legenda i.c1 { background: var(--c1); }
 .legenda i.c2 { background: var(--c2); }
 .legenda i.c3 { background: var(--c3); }
+.legenda i.bad { background: var(--bad); }
 .legenda i.lk { background: var(--lock-soft); outline: 1px dashed var(--lock); }
 .legenda i.linha { height: 2px; border-radius: 0; width: 16px; }
 
@@ -329,3 +335,12 @@ td .fraco { color: var(--muted); font-size: 12.5px; display: block; }
   .manchete h1 { font-size: 19px; }
   .card { padding: 16px; }
 }
+
+.legenda-calor { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 12.5px; color: var(--muted); margin-top: 12px; }
+.legenda-calor .chip { display: inline-block; width: 22px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; border: 1px solid var(--line); }
+.cartao-graf { display: grid; gap: 4px; align-content: start; }
+
+.lista-var { list-style: none; margin: 14px 0 0; padding: 12px 0 0; border-top: 1px solid var(--line); display: grid; gap: 8px; font-size: 13.5px; }
+.lista-var li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; align-items: baseline; }
+.lista-var b { font-variant-numeric: tabular-nums; }
+.lista-var h3 { font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 2px; }

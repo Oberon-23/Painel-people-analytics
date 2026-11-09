@@ -1,7 +1,7 @@
-import { Halteres } from '@/components/graficos';
+import { DiferencaSalarial } from '@/components/graficos';
 import { Bloqueio, Cabecalho, Oculto } from '@/components/ui';
 import { estaBloqueado, remuneracao } from '@/lib/dados';
-import { brl, int } from '@/lib/formato';
+import { brl } from '@/lib/formato';
 import { exigirSessao } from '@/lib/sessao';
 
 export default async function Remuneracao() {
@@ -23,8 +23,6 @@ export default async function Remuneracao() {
   const visiveis = r.filter((l) => l.razao != null);
   const pior = [...visiveis].sort((a, b) => (a.razao ?? 1) - (b.razao ?? 1))[0];
   const ocultos = r.filter((l) => l.suprimido);
-  const totalF = r.reduce((s, l) => s + l.n_mulheres, 0);
-  const totalM = r.reduce((s, l) => s + l.n_homens, 0);
 
   return (
     <>
@@ -48,18 +46,21 @@ export default async function Remuneracao() {
       </section>
 
       <section className="card">
-        <h2>Mediana salarial por nível</h2>
-        <p className="sub">À direita, quanto a mediana das mulheres fica acima ou abaixo da dos homens. Passe o mouse nos pontos para ver os valores.</p>
+        <h2>Diferença salarial por nível</h2>
+        <p className="sub">
+          Quanto a mediana das mulheres fica acima ou abaixo da dos homens no mesmo nível. Em vermelho, diferenças maiores
+          que 3% contra as mulheres. Os valores em reais estão na tabela abaixo.
+        </p>
         <div className="legenda">
-          <span><i className="c2" />Mulheres ({int(totalF)})</span>
-          <span><i className="c1" />Homens ({int(totalM)})</span>
-          <span><i className="lk" />Grupo oculto (menos de 5)</span>
+          <span><i className="c1" />Diferença de até 3%</span>
+          <span><i className="bad" />Mais de 3% contra as mulheres</span>
+          <span><i className="lk" />Grupo oculto (menos de 5 mulheres ou homens)</span>
         </div>
-        <Halteres linhas={r} />
+        <DiferencaSalarial linhas={r} />
       </section>
 
       <section className="card">
-        <h2>Tabela</h2>
+        <h2>Medianas por nível</h2>
         <div className="tabela-wrap">
           <table>
             <thead>

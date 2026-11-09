@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Movimentacao, LinhaPercentual, TurnoverPorArea } from '@/components/graficos';
+import { BarrasMovimento, LinhaPercentual, LinhaPessoas, TurnoverPorArea } from '@/components/graficos';
 import { Kpi, Oculto } from '@/components/ui';
 import { kpis, porArea, serieMensal } from '@/lib/dados';
 import { anos, int, pct, pp, sinal } from '@/lib/formato';
@@ -10,12 +10,15 @@ export default async function VisaoGeral() {
   const { token, sessao: s } = await exigirSessao();
   const [k, meses, areas] = await Promise.all([kpis(token), serieMensal(token, 24), porArea(token)]);
   const quem = s.perfil === 'gestor' ? 'sua equipe' : s.perfil === 'hrbp' ? 'a Diretoria de Operações' : 'a Rotalume';
-  const quemDe = s.perfil === 'gestor' ? 'da sua equipe' : s.perfil === 'hrbp' ? 'da Diretoria de Operações' : 'da Rotalume';
   const { manchete, achados } = lerResultados(k, areas, quem);
   const mesesFechados = meses.slice(0, -1);
   const turnSobe = k.turnover_12m != null && k.turnover_ant != null && k.turnover_12m > k.turnover_ant;
   const absSobe = k.absenteismo_3m != null && k.absenteismo_ant != null && k.absenteismo_3m > k.absenteismo_ant;
   const variosSetores = areas.length > 1;
+  const variacaoAus = areas
+    .filter((a) => !a.suprimido && (a.headcount ?? 0) >= 10 && a.absenteismo_3m != null && a.absenteismo_ant != null)
+    .sort((a, b) => (b.absenteismo_3m! - b.absenteismo_ant!) - (a.absenteismo_3m! - a.absenteismo_ant!))
+    .slice(0, 4);
 
   return (
     <>
@@ -66,23 +69,30 @@ export default async function VisaoGeral() {
         </section>
       )}
 
-      <section className="card">
-        <h2>Entradas e saídas mês a mês</h2>
-        <p className="sub">Admissões para cima, desligamentos para baixo, e o total de pessoas na linha. A faixa sombreada marca os últimos 9 meses.</p>
-        <div className="legenda">
-          <span><i className="c1" />Admissões</span>
-          <span><i className="c2" />Desligamentos</span>
-          <span><i className="c1 linha" />Pessoas no fim do mês</span>
-        </div>
-        <Movimentacao meses={mesesFechados} inicioTendencia={mesesFechados[mesesFechados.length - 9]?.mes} />
-      </section>
+      <div className="grade g2">
+        <section className="card cartao-graf">
+          <h2>Admissões e desligamentos</h2>
+          <p className="sub">Por mês, nos últimos 2 anos. A faixa marca o período em que as saídas aceleraram.</p>
+          <div className="legenda">
+            <span><i className="c1" />Admissões</span>
+            <span><i className="c2" />Desligamentos</span>
+          </div>
+          <BarrasMovimento meses={mesesFechados} mesesDestaque={9} />
+        </section>
+        <section className="card cartao-graf">
+          <h2>Pessoas no fim do mês</h2>
+          <p className="sub">Quadro ativo, contando só quem já foi admitido. O eixo não começa no zero para mostrar a variação.</p>
+          <div className="legenda"><span><i className="c1 linha" />Pessoas</span></div>
+          <LinhaPessoas meses={mesesFechados} />
+        </section>
+      </div>
 
       <div className="grade g-7-5">
         {variosSetores ? (
           <section className="card">
             <h2>Turnover por área</h2>
-            <p className="sub">Saídas dos últimos 12 meses sobre a média de pessoas. A linha tracejada é a média {quemDe}.</p>
-            <TurnoverPorArea areas={areas} media={k.turnover_12m} />
+            <p className="sub">Saídas dos últimos 12 meses sobre a média de pessoas no período. Em vermelho, áreas com mais de 1,5 vez a média.</p>
+            <TurnoverPorArea areas={areas} media={k.turnover_12m} rotuloMedia={s.perfil === 'gestor' ? 'média da equipe' : s.perfil === 'hrbp' ? 'média da diretoria' : 'média da empresa'} />
           </section>
         ) : (
           <section className="card">
@@ -93,8 +103,20 @@ export default async function VisaoGeral() {
         )}
         <section className="card">
           <h2>Absenteísmo</h2>
-          <p className="sub">Dias de ausência (atestado e falta) sobre os dias úteis. Linha tracejada: 2%, referência comum na indústria.</p>
-          <LinhaPercentual meses={mesesFechados.slice(-12).map((m) => ({ mes: m.mes, v: m.absenteismo }))} referencia={0.02} />
+          <p className="sub">Dias de ausência (atestado e falta) sobre os dias úteis, nos últimos 12 meses.</p>
+          <LinhaPercentual meses={mesesFechados.slice(-12).map((m) => ({ mes: m.mes, v: m.absenteismo }))} referencia={0.02} rotuloReferencia="referência 2%" />
+          {variacaoAus.length ? (
+            <ul className="lista-var">
+              <li><h3>Variação por área: últimos 3 meses contra os 3 anteriores</h3></li>
+              {variacaoAus.map((a) => (
+                <li key={a.area_id}>
+                  <span>{a.area}</span>
+                  <b>{pct(a.absenteismo_3m, 1)}</b>
+                  <span className={(a.absenteismo_3m ?? 0) > (a.absenteismo_ant ?? 0) ? 'sobe-ruim' : 'desce-bom'}>{pp(a.absenteismo_3m, a.absenteismo_ant, 1)}</span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </section>
       </div>
 
@@ -145,6 +167,12 @@ function TabelaAreas({ areas }: { areas: Awaited<ReturnType<typeof porArea>> }) 
           ))}
         </tbody>
       </table>
+      <p className="legenda-calor">
+        <span>Cores: quanto mais forte, pior.</span>
+        <span><i className="chip calor-1" />Turnover a partir de 15% · absenteísmo a partir de 2%</span>
+        <span><i className="chip calor-2" />25% · 2,5%</span>
+        <span><i className="chip calor-3" />40% · 3%</span>
+      </p>
     </div>
   );
 }
