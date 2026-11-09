@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGPASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Instala o banco de teste
+        run: |
+          bash scripts/montar-sql.sh
+          psql -h localhost -U postgres -c 'create database rh_teste'
+          psql -h localhost -U postgres -d rh_teste -v ON_ERROR_STOP=1 -q -f db/instalar.sql
+          psql -h localhost -U postgres -c "alter role rh_app password 'senha-ci'"
+          SECRET=$(psql -h localhost -U postgres -d rh_teste -Atc "select valor from app_privado.config where chave='token_secret'")
+          {
+            echo "DATABASE_URL=postgres://rh_app:senha-ci@localhost:5432/rh_teste"
+            echo "TOKEN_SECRET=$SECRET"
+            echo "CRON_SECRET=cron-ci"
+          } > .env.local
+      - run: npx tsc --noEmit
+      - run: npm test
+      - run: npm run build
