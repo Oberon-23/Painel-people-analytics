@@ -17,12 +17,12 @@ A mesma consulta, sem filtro nenhum, devolve:
 A tela não esconde nada. Ela simplesmente não recebe.
 
 O que está por trás:
-🔒 Linha: Row Level Security no PostgreSQL
+🔒 Linha: Row Level Security no PostgreSQL, e o aplicativo não enxerga nenhuma tabela, só funções
 🔒 Coluna: salário e CPF só saem para quem pode, e o CPF sai mascarado
-🔒 Grupo: médias de grupos com menos de 5 pessoas ficam ocultas, porque revelariam alguém
-🔒 Rastro: todo acesso a dado pessoal fica registrado, e o aplicativo não consegue apagar o registro
+🔒 Grupo: médias de grupos com menos de 5 pessoas ficam ocultas, porque revelariam alguém (e o total não pode entregar o grupo escondido)
+🔒 Rastro: não existe caminho para ler dados de pessoas sem deixar registro, e o aplicativo não consegue apagá-lo
 
-E tem uma página que roda, ao vivo, 10 tentativas de burlar as regras: ler salário direto da tabela, trocar o usuário da sessão, apagar a auditoria... Todas barradas pelo banco.
+E tem uma página que roda, ao vivo, 11 tentativas de burlar as regras: ler a tabela direto, trocar o usuário da sessão, apagar a auditoria... Todas barradas ou filtradas pelo banco.
 
 O que levo para qualquer painel, seja em HTML ou em Power BI: segurança não é esconder coluna na tela. É decidir onde o dado fica e quem pode recebê-lo.
 

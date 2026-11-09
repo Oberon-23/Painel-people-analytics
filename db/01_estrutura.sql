@@ -117,10 +117,11 @@ create index acessos_quando_idx on app.acessos (quando desc);
 create table app.login_tentativas (
   id     bigint generated always as identity primary key,
   email  text not null,
+  origem text not null,                    -- hash do IP, nunca o IP em si
   quando timestamptz not null default now(),
   ok     boolean not null
 );
-create index login_tentativas_idx on app.login_tentativas (email, quando desc);
+create index login_tentativas_idx on app.login_tentativas (origem, quando desc);
 
 create table app.atualizacoes (
   id      bigint generated always as identity primary key,

@@ -12,7 +12,7 @@ const PERFIS = [
 
 const ERROS: Record<string, string> = {
   invalido: 'E-mail ou senha incorretos.',
-  bloqueado: 'Muitas tentativas erradas. Esse e-mail ficou bloqueado por 15 minutos.',
+  bloqueado: 'Muitas tentativas erradas a partir desta conexão. Tente de novo em 15 minutos.',
 };
 
 export default async function Login({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {

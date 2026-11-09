@@ -27,9 +27,9 @@ export async function rodarProvas(token: string, usuarioId: number, perfil: stri
   const alvo = usuarioId === 1 ? 2 : 1;
   const casos: Caso[] = [
     {
-      titulo: 'Contar todas as pessoas da tabela, sem filtro',
-      explicacao: 'A consulta não tem WHERE. Quem filtra é a política de RLS do banco.',
-      sql: 'select count(*) from rh.colaboradores',
+      titulo: 'Pedir todas as pessoas pela API, sem filtro',
+      explicacao: 'A consulta não tem WHERE. Quem filtra é a política de RLS do banco, e o acesso fica registrado na auditoria.',
+      sql: 'select count(*) from api.pessoas()',
       ler: (r) => {
         const n = Number(r[0].count);
         return perfil === 'diretoria_rh'
@@ -38,9 +38,15 @@ export async function rodarProvas(token: string, usuarioId: number, perfil: stri
       },
     },
     {
-      titulo: 'Ler o salário direto da tabela',
-      explicacao: 'O usuário do aplicativo não tem permissão na coluna. Salário só sai pela visão, e só para quem pode.',
-      sql: 'select nome, salario from rh.colaboradores limit 5',
+      titulo: 'Ler a tabela de pessoas direto, sem passar pela API',
+      explicacao: 'O usuário do aplicativo não enxerga nenhuma tabela. Todo acesso passa por funções que aplicam as regras e deixam rastro.',
+      sql: 'select nome, cargo from rh.colaboradores limit 5',
+      ler: () => ({ resultado: 'Devolveu dados', status: 'permitido' }),
+    },
+    {
+      titulo: 'Pedir o salário de uma pessoa pela função interna',
+      explicacao: 'A função que devolve salário só pode ser chamada por dentro da API, que confere o perfil antes.',
+      sql: 'select app.salario_de(1)',
       ler: () => ({ resultado: 'Devolveu dados', status: 'permitido' }),
     },
     {
@@ -76,7 +82,7 @@ export async function rodarProvas(token: string, usuarioId: number, perfil: stri
     {
       titulo: 'Trocar o usuário dentro do token',
       explicacao: `O token foi editado para dizer "sou o usuário ${alvo}". A assinatura deixa de bater e o banco trata como ninguém.`,
-      sql: 'select count(*) from rh.colaboradores',
+      sql: 'select count(*) from api.pessoas()',
       token: (t) => t.replace(/^\d+/, String(alvo)),
       ler: (r) =>
         Number(r[0].count) === 0
@@ -86,7 +92,7 @@ export async function rodarProvas(token: string, usuarioId: number, perfil: stri
     {
       titulo: 'Consultar sem token (como se a sessão tivesse vazado sem o cookie)',
       explicacao: 'Sem token não há usuário, e sem usuário a RLS não devolve nada.',
-      sql: 'select count(*) from rh.colaboradores',
+      sql: 'select count(*) from api.pessoas()',
       token: () => '',
       ler: (r) =>
         Number(r[0].count) === 0
@@ -133,5 +139,6 @@ function traduzir(msg: string): string {
   if (/permission denied for schema/.test(msg)) return 'Negado: sem acesso a esse esquema';
   if (/permission denied/.test(msg)) return 'Negado: permissão recusada pelo banco';
   if (/remuneração/.test(msg)) return 'Negado: seu perfil não acessa remuneração';
+  if (/Sessão inválida/.test(msg)) return 'Negado: sessão inválida, nenhuma pessoa';
   return `Negado: ${msg}`;
 }

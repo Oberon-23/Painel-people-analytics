@@ -165,7 +165,7 @@ export async function pessoas(token: string, f: FiltroPessoas, motivo: 'consulta
 
 export const areasVisiveis = cache((token: string) =>
   comUsuario(token, async (c) =>
-    (await c.query('select distinct area from api.pessoas order by area')).rows.map((r) => r.area as string),
+    (await c.query('select area from api.areas_visiveis() as area')).rows.map((r) => r.area as string),
   ),
 );
 
@@ -187,5 +187,5 @@ export async function registrar(token: string, acao: string, detalhe?: string) {
 
 /** Contagem direta na visão de pessoas: prova de que o banco filtra sozinho. */
 export async function contarPessoas(token: string): Promise<number> {
-  return comUsuario(token, async (c) => Number((await c.query('select count(*) as n from api.pessoas')).rows[0].n));
+  return comUsuario(token, async (c) => Number((await c.query('select count(*) as n from api.pessoas()')).rows[0].n));
 }

@@ -98,7 +98,7 @@ export default async function Seguranca() {
             <ul>
               <li>Confere a sessão de novo, com um segredo próprio</li>
               <li>Aplica as regras por linha, coluna e grupo</li>
-              <li>Usuário do aplicativo só lê, sem poder de dono</li>
+              <li>Usuário do aplicativo não vê tabela nenhuma, só a API</li>
               <li>Registra cada acesso a dado pessoal</li>
             </ul>
           </div>
@@ -107,9 +107,9 @@ export default async function Seguranca() {
 
       <section className="camadas" aria-label="Camadas de proteção">
         <div className="camada"><span className="num">01 · LINHA</span><h3>Cada perfil, suas pessoas</h3><p>Row Level Security no PostgreSQL. A gerente consulta a tabela inteira e recebe só a equipe dela, porque o filtro é do banco.</p></div>
-        <div className="camada"><span className="num">02 · COLUNA</span><h3>Dado sensível sob medida</h3><p>O usuário do aplicativo não tem permissão nas colunas de salário e CPF. Elas só saem por funções que conferem o perfil e mascaram o CPF.</p></div>
-        <div className="camada"><span className="num">03 · GRUPO</span><h3>Nada de grupos pequenos</h3><p>Com menos de 5 pessoas, uma média revela alguém. Esses grupos saem ocultos, e a pesquisa de clima nem guarda quem respondeu.</p></div>
-        <div className="camada"><span className="num">04 · RASTRO</span><h3>Tudo registrado</h3><p>Login, consulta à lista de pessoas e exportação ficam gravados no banco, com usuário, filtro e quantidade. O aplicativo não consegue apagar.</p></div>
+        <div className="camada"><span className="num">02 · COLUNA</span><h3>Dado sensível sob medida</h3><p>O usuário do aplicativo não enxerga nenhuma tabela. Salário e CPF só saem por funções que conferem o perfil e mascaram o CPF; data de nascimento não sai nunca.</p></div>
+        <div className="camada"><span className="num">03 · GRUPO</span><h3>Nada de grupos pequenos</h3><p>Com menos de 5 pessoas, uma média revela alguém. Esses grupos saem ocultos, junto com mais um quando preciso, para que o total não entregue o oculto. O clima nem guarda quem respondeu.</p></div>
+        <div className="camada"><span className="num">04 · RASTRO</span><h3>Tudo registrado</h3><p>Toda leitura de pessoas passa por funções que gravam usuário, filtro e quantidade: não há caminho sem rastro. O aplicativo não consegue apagar o registro.</p></div>
       </section>
     </>
   );

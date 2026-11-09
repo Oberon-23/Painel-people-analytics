@@ -1,6 +1,6 @@
 'use server';
 
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { comUsuario } from '@/lib/db';
 import { COOKIE_SESSAO, DURACAO_SESSAO_S, criarToken, lerToken } from '@/lib/token';
@@ -15,10 +15,14 @@ const DEMO: Record<string, true> = {
 const SENHA_DEMO = 'rotalume-demo';
 
 async function autenticar(email: string, senha: string) {
-  // a senha é conferida dentro do banco (bcrypt), que também bloqueia
-  // o e-mail depois de 5 tentativas erradas em 15 minutos
+  // A senha é conferida dentro do banco (bcrypt). O bloqueio por excesso de
+  // erros vale para e-mail + origem: quem erra de propósito trava só a si
+  // mesmo, não o perfil de demonstração para todo mundo. Na Vercel, o IP
+  // vem de cabeçalhos que a própria plataforma preenche.
+  const h = await headers();
+  const origem = (h.get('x-real-ip') ?? h.get('x-forwarded-for')?.split(',')[0] ?? '').trim() || null;
   const r = await comUsuario(null, async (c) =>
-    (await c.query('select api.login($1, $2) as r', [email, senha])).rows[0].r as { ok: boolean; id?: number; motivo?: string },
+    (await c.query('select api.login($1, $2, $3) as r', [email, senha, origem])).rows[0].r as { ok: boolean; id?: number; motivo?: string },
   );
   if (!r.ok || !r.id) redirect(`/login?erro=${r.motivo === 'bloqueado' ? 'bloqueado' : 'invalido'}`);
 

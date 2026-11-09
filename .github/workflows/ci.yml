@@ -24,15 +24,17 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Instala o banco de teste
+      - name: Instala o banco de teste (sem superusuário, como no Supabase e no Neon)
         run: |
           bash scripts/montar-sql.sh
-          psql -h localhost -U postgres -c 'create database rh_teste'
-          psql -h localhost -U postgres -d rh_teste -v ON_ERROR_STOP=1 -q -f db/instalar.sql
-          psql -h localhost -U postgres -c "alter role rh_app password 'senha-ci'"
+          psql -h localhost -U postgres -c "create role instalador login createrole password 'inst-ci'"
+          psql -h localhost -U postgres -c 'create database rh_teste owner instalador'
+          PGPASSWORD=inst-ci psql -h localhost -U instalador -d rh_teste -v ON_ERROR_STOP=1 -q -f db/instalar.sql
+          PGPASSWORD=inst-ci psql -h localhost -U instalador -d rh_teste -c "alter role rh_app password 'senha-ci'"
           SECRET=$(psql -h localhost -U postgres -d rh_teste -Atc "select valor from app_privado.config where chave='token_secret'")
           {
             echo "DATABASE_URL=postgres://rh_app:senha-ci@localhost:5432/rh_teste"
+            echo "DATABASE_URL_ADMIN=postgres://instalador:inst-ci@localhost:5432/rh_teste"
             echo "TOKEN_SECRET=$SECRET"
             echo "CRON_SECRET=cron-ci"
           } > .env.local

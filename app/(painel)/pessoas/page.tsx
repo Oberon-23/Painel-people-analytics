@@ -19,7 +19,7 @@ export default async function Pessoas({ searchParams }: { searchParams: Promise<
         <Cabecalho sobre="Pessoas" titulo="Lista de colaboradores" />
         <Bloqueio
           titulo="Seu perfil não acessa dados individuais"
-          sql={`select count(*) from api.pessoas;\n  count = ${n}`}
+          sql={`select count(*) from api.pessoas();\n  count = ${n}`}
         >
           People Analytics trabalha só com números de grupos. A consulta acima rodou agora, com a sua sessão, e o
           banco devolveu <b>{n} pessoas</b>: a política de segurança da tabela não tem nenhuma pessoa no seu escopo. Não é a tela

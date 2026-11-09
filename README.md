@@ -31,23 +31,23 @@ Este projeto mostra o outro caminho: a página é só a vitrine. Quem decide o q
 
 | Camada | Como funciona | Onde está |
 |---|---|---|
-| **1. Linha** | Row Level Security no PostgreSQL. `select count(*) from rh.colaboradores`, sem `WHERE`, devolve (na instalação de exemplo) 521 registros para a diretoria, 342 para o HRBP, 155 para a gerente e 0 para o analista. | `db/03_seguranca.sql`, políticas `escopo` |
-| **2. Coluna** | O usuário do aplicativo não tem permissão nas colunas `salario`, `cpf` e `nascimento`. Salário e CPF saem só por funções que conferem o perfil e mascaram o CPF. | `grant select (...)`, `app.salario_de`, `app.cpf_de` |
-| **3. Grupo** | Grupos com menos de 5 pessoas saem vazios: em grupos tão pequenos, a média revela alguém. A pesquisa de clima nem guarda quem respondeu. | `api.remuneracao`, `api.clima`, `app.k_min()` |
-| **4. Rastro** | Login, consulta à lista de pessoas e exportação ficam gravados com usuário, filtro e quantidade. O aplicativo não lê, não altera e não apaga o log. | `app.acessos`, `api.registrar`, página Auditoria |
+| **1. Linha** | Row Level Security no PostgreSQL. `select count(*) from api.pessoas()`, sem `WHERE`, devolve (na instalação de exemplo) 521 registros para a diretoria, 342 para o HRBP, 155 para a gerente e 0 para o analista. | `db/03_seguranca.sql`, políticas `escopo` |
+| **2. Coluna** | O usuário do aplicativo não enxerga nenhuma tabela. Quem lê pessoas é um papel interno (`rh_leitor`) sem acesso às colunas `salario`, `cpf` e `nascimento`; salário e CPF saem só por funções que conferem o perfil e mascaram o CPF. Nascimento não sai por nenhum caminho. | `rh_leitor`, `grant select (...)`, `app.salario_de`, `app.cpf_de` |
+| **3. Grupo** | Grupos com menos de 5 pessoas saem vazios: em grupos tão pequenos, a média revela alguém. Se só uma área ficaria oculta, a menor área visível também sai (supressão complementar), para o total menos as visíveis não revelar a escondida. A pesquisa de clima nem guarda quem respondeu. | `api.remuneracao`, `api.clima`, `app.k_min()` |
+| **4. Rastro** | Toda leitura de pessoas passa por funções que gravam usuário, filtro e quantidade; não existe caminho que leia pessoas sem deixar rastro. Login e exportação também ficam gravados. O aplicativo não lê, não altera e não apaga o log. | `app.acessos`, `api.registrar`, página Auditoria |
 
 ### Como o banco sabe quem está pedindo
 
-1. No login, o banco confere a senha (bcrypt) e bloqueia o e-mail depois de 5 erros em 15 minutos.
+1. No login, o banco confere a senha (bcrypt). Depois de 5 erros em 15 minutos, bloqueia o par e-mail + origem (o IP, guardado só como hash). Assim, quem erra de propósito trava a si mesmo, e não o perfil para todo mundo; uma origem que erra em muitos e-mails também é barrada.
 2. O servidor cria uma sessão `usuário.validade.assinatura` (HMAC-SHA256) e grava num cookie `httpOnly`. O JavaScript da página não consegue ler esse cookie.
 3. A cada consulta, o servidor abre uma transação e repassa a sessão ao banco (`set_config('app.token', ..., true)`).
 4. O banco confere a assinatura com um segredo guardado numa tabela que o usuário do aplicativo não consegue ler. Sessão trocada, vencida ou ausente vira "ninguém", e "ninguém" recebe zero linhas.
 
-Ou seja: mesmo que alguém consiga rodar SQL com o usuário do aplicativo, sem o segredo não se passa por outra pessoa.
+Ou seja: mesmo que alguém consiga rodar SQL com o usuário do aplicativo, não enxerga tabela nenhuma e, sem o segredo, não se passa por outra pessoa.
 
 ### A página Segurança prova tudo isso ao vivo
 
-Ela roda 10 tentativas reais de burlar as regras com a sua sessão: ler salário direto da tabela, ler respostas do clima, ler senhas, dobrar salários, apagar a auditoria, trocar o usuário dentro da sessão, consultar sem sessão. Tudo dentro de uma transação desfeita no fim, então nada muda.
+Ela roda 11 tentativas reais de burlar as regras com a sua sessão: ler a tabela direto, chamar a função interna de salário, ler respostas do clima, ler senhas, dobrar salários, apagar a auditoria, trocar o usuário dentro da sessão, consultar sem sessão. Tudo dentro de uma transação desfeita no fim, então nada muda.
 
 ![Segurança](docs/img/seguranca.png)
 
@@ -79,8 +79,8 @@ Um agendamento da Vercel (`vercel.json`) chama `/api/cron` todo dia às 6h (hor�
 - **Next.js 16** (App Router, Server Components, Server Actions, Proxy) + **React 19** + **TypeScript**
 - **PostgreSQL 16**: RLS, privilégios por coluna, funções `security definer`, `pgcrypto` (bcrypt e HMAC), PL/pgSQL
 - Gráficos em **SVG próprio**, desenhados no servidor
-- **Vitest**: 19 testes de segurança rodando contra um Postgres real
-- **GitHub Actions**: sobe um Postgres, instala o banco e roda tipos, testes e build
+- **Vitest**: 21 testes de segurança rodando contra um Postgres real
+- **GitHub Actions**: sobe um Postgres, instala o banco sem superusuário (como no Supabase) e roda tipos, testes e build
 - Deploy: **Vercel** + **Supabase** (Postgres gerenciado, plano gratuito), com conexão TLS verificada
 
 ## Estrutura

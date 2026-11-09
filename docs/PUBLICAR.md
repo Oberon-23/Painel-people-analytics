@@ -65,7 +65,7 @@ O agendamento diário já vem configurado no `vercel.json`. Na aba **Settings �
 
 1. Abra o site e entre como **Helena**. A visão geral deve mostrar cerca de 350 pessoas.
 2. Entre como **Rafael** e abra **Pessoas**: deve aparecer "o banco devolveu 0 pessoas".
-3. Abra **Segurança** com qualquer perfil: as 10 tentativas devem aparecer como barradas ou filtradas.
+3. Abra **Segurança** com qualquer perfil: as tentativas devem aparecer como barradas ou filtradas.
 4. Entre como **Helena** e abra **Auditoria**: os acessos dos outros perfis aparecem lá.
 
 Se a página der erro, veja em **Vercel → Logs**:
