@@ -29,6 +29,6 @@ O que levo para qualquer painel, seja em HTML ou em Power BI: segurança não é
 Stack: PostgreSQL, Next.js e TypeScript. Dados 100% fictícios.
 
 🔗 Teste com os 4 perfis: [LINK DA VERCEL]
-💻 Código: [LINK DO GITHUB]
+💻 Código: https://github.com/Oberon-23/painel-people-analytics
 
 #PeopleAnalytics #LGPD #SegurancaDaInformacao #PostgreSQL #AnaliseDeDados

@@ -36,7 +36,7 @@ postgresql://rh_app:rh_abc123...@ep-xxxx-pooler.sa-east-1.aws.neon.tech/neondb?s
 
 ## 3. Publicar na Vercel
 
-1. Na Vercel, clique em **Add New → Project** e importe o repositório.
+1. Na Vercel, clique em **Add New → Project** e importe o repositório `Oberon-23/painel-people-analytics`.
 2. Em **Environment Variables**, crie três variáveis:
 
 | Nome | Valor |
