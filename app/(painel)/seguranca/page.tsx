@@ -1,3 +1,4 @@
+import { Sql } from '@/components/Sql';
 import { ArrowRight, Check, CircleCheck, Database, Filter, Globe, Minus, Server, ShieldCheck } from 'lucide-react';
 import { Cabecalho } from '@/components/ui';
 import { dataHora } from '@/lib/formato';
@@ -62,7 +63,7 @@ export default async function Seguranca() {
               </span>
               <h3>{p.titulo}</h3>
               <span className={`res ${p.status}`}>{p.resultado}</span>
-              <code>{p.sql}</code>
+              <code><Sql texto={p.sql} /></code>
               <p>{p.explicacao}</p>
             </article>
           ))}

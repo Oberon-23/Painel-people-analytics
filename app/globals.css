@@ -282,9 +282,20 @@ td .fraco { color: var(--muted); font-size: 12.5px; display: block; }
 
 .bloqueio { display: grid; gap: 14px; justify-items: start; padding: 26px; }
 .bloqueio .icone { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; background: var(--lock-soft); color: var(--lock); }
-.bloqueio pre {
-  margin: 0; width: 100%; overflow-x: auto; background: var(--surface-2); border-radius: 10px; padding: 12px 14px; font-family: var(--mono); font-size: 12.5px;
+.bloqueio pre.terminal {
+  margin: 0; width: 100%; overflow-x: auto; background: var(--surface-2); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: 10px; padding: 12px 14px; font-family: var(--mono); font-size: 13px; line-height: 1.7; display: grid;
 }
+.terminal .linha { display: block; white-space: pre; }
+.terminal .prompt { color: var(--muted); user-select: none; }
+.terminal .resultado { color: var(--ink-2); }
+.terminal .erro { color: var(--bad); margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--line-2); }
+.terminal .erro b { letter-spacing: .04em; }
+.sql-k { color: var(--accent); font-weight: 700; }
+.sql-f { color: var(--lock); }
+.sql-s { color: var(--good); }
+.sql-n { color: var(--warn); }
+.sql-c { color: var(--muted); font-style: italic; }
 
 /* ---------- segurança ---------- */
 .provas { display: grid; gap: 10px; }
