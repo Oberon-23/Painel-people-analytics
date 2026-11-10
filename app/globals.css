@@ -344,3 +344,14 @@ td .fraco { color: var(--muted); font-size: 12.5px; display: block; }
 .lista-var li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; align-items: baseline; }
 .lista-var b { font-variant-numeric: tabular-nums; }
 .lista-var h3 { font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
+
+/* esqueleto enquanto a próxima tela carrega */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.carregando { display: grid; gap: 16px; }
+.esq { border-radius: 14px; background: linear-gradient(90deg, var(--surface-2) 25%, var(--line) 50%, var(--surface-2) 75%); background-size: 200% 100%; animation: esq 1.2s ease-in-out infinite; }
+.esq-titulo { height: 92px; }
+.esq-grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+.esq-cartao { height: 104px; }
+.esq-bloco { height: 320px; }
+@keyframes esq { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .esq { animation: none; } }

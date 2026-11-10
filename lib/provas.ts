@@ -112,8 +112,9 @@ export async function rodarProvas(token: string, usuarioId: number, perfil: stri
 
   return comUsuario(token, async (c) => {
     const out: Prova[] = [];
+    // um savepoint só: "rollback to savepoint" desfaz a tentativa e mantém o savepoint para a próxima
+    await c.query('savepoint prova');
     for (const caso of casos) {
-      await c.query('savepoint prova');
       try {
         if (caso.token) await c.query("select set_config('app.token', $1, true)", [caso.token(token)]);
         const r = await c.query(caso.sql);

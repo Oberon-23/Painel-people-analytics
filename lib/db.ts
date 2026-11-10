@@ -40,8 +40,8 @@ function pool(): Pool {
 export async function comUsuario<T>(token: string | null, fn: (c: PoolClient) => Promise<T>): Promise<T> {
   const c = await pool().connect();
   try {
-    await c.query('begin');
-    await c.query("select set_config('app.token', $1, true)", [token ?? '']);
+    // abre a transação e grava o token numa ida só ao banco (cada ida conta quando o banco está longe)
+    await c.query(`begin; select set_config('app.token', ${c.escapeLiteral(token ?? '')}, true)`);
     const r = await fn(c);
     await c.query('commit');
     return r;
