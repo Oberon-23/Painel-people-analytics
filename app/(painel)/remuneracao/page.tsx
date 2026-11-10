@@ -12,9 +12,9 @@ export default async function Remuneracao() {
     return (
       <>
         <Cabecalho sobre="Remuneração" titulo="Igualdade salarial por nível" />
-        <Bloqueio titulo="Seu perfil não acessa remuneração" sql="select * from api.remuneracao();" erro={r.motivo}>
-          Gestores acompanham a própria equipe, mas não os salários dela. A consulta acima foi feita agora e o banco
-          recusou: a regra está no banco, então nenhuma tela, exportação ou chamada direta consegue esses números com o seu perfil.
+        <Bloqueio titulo="Esta tela não está disponível para o seu perfil">
+          Gestores acompanham a própria equipe, mas não os salários dela. A informação de remuneração fica restrita à
+          Diretoria de RH.
         </Bloqueio>
       </>
     );

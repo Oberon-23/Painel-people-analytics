@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Download, Search } from 'lucide-react';
 import { AvisoRegistro, Bloqueio, Cabecalho, Oculto } from '@/components/ui';
-import { areasVisiveis, contarPessoas, pessoas, type FiltroPessoas } from '@/lib/dados';
+import { areasVisiveis, pessoas, type FiltroPessoas } from '@/lib/dados';
 import { brl, data } from '@/lib/formato';
 import { exigirSessao } from '@/lib/sessao';
 
@@ -13,17 +13,12 @@ export default async function Pessoas({ searchParams }: { searchParams: Promise<
   const sp = await searchParams;
 
   if (!s.pode.individual) {
-    const n = await contarPessoas(token);
     return (
       <>
         <Cabecalho sobre="Pessoas" titulo="Lista de colaboradores" />
-        <Bloqueio
-          titulo="Seu perfil não acessa dados individuais"
-          sql={`select count(*) from api.pessoas();\n  count = ${n}`}
-        >
-          People Analytics trabalha só com números de grupos. A consulta acima rodou agora, com a sua sessão, e o
-          banco devolveu <b>{n} pessoas</b>: a política de segurança da tabela não tem nenhuma pessoa no seu escopo. Não é a tela
-          que esconde, é o banco que não entrega.
+        <Bloqueio titulo="Esta tela não está disponível para o seu perfil">
+          Para proteger a privacidade das pessoas, o seu perfil trabalha só com números de grupos, como turnover, clima e
+          absenteísmo por área. A lista individual de colaboradores fica restrita a quem precisa dela no trabalho.
         </Bloqueio>
       </>
     );

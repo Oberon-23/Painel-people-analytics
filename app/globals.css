@@ -282,15 +282,15 @@ td .fraco { color: var(--muted); font-size: 12.5px; display: block; }
 
 .bloqueio { display: grid; gap: 14px; justify-items: start; padding: 26px; }
 .bloqueio .icone { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; background: var(--lock-soft); color: var(--lock); }
-.bloqueio pre.terminal {
-  margin: 0; width: 100%; overflow-x: auto; background: var(--surface-2); border: 1px solid var(--line); border-left: 3px solid var(--accent);
-  border-radius: 10px; padding: 12px 14px; font-family: var(--mono); font-size: 13px; line-height: 1.7; display: grid;
+.bloqueio p { margin: 0; max-width: 62ch; color: var(--ink-2); }
+.bloqueio-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.btn-link {
+  display: inline-flex; align-items: center; padding: 8px 14px; border-radius: 9px; font-size: 14px; font-weight: 600; text-decoration: none;
+  background: var(--accent); color: var(--accent-ink); border: 1px solid var(--accent);
 }
-.terminal .linha { display: block; white-space: pre; }
-.terminal .prompt { color: var(--muted); user-select: none; }
-.terminal .resultado { color: var(--ink-2); }
-.terminal .erro { color: var(--bad); margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--line-2); }
-.terminal .erro b { letter-spacing: .04em; }
+.btn-link.sec { background: var(--surface); color: var(--ink); border-color: var(--line-2); font-weight: 500; }
+.btn-link:hover { filter: brightness(1.08); }
+.btn-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .sql-k { color: var(--accent); font-weight: 700; }
 .sql-f { color: var(--lock); }
 .sql-s { color: var(--good); }

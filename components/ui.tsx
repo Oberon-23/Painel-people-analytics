@@ -1,4 +1,4 @@
-import { Sql } from './Sql';
+import Link from 'next/link';
 import { Lock, ShieldCheck } from 'lucide-react';
 import type { ReactNode } from 'react';
 
@@ -35,19 +35,16 @@ export function Oculto({ texto = 'oculto' }: { texto?: string }) {
   );
 }
 
-export function Bloqueio({ titulo, children, sql, erro }: { titulo: string; children: ReactNode; sql?: string; erro?: string }) {
+export function Bloqueio({ titulo, children }: { titulo: string; children: ReactNode }) {
   return (
     <section className="card bloqueio">
       <span className="icone"><Lock size={22} aria-hidden="true" /></span>
       <h2>{titulo}</h2>
       <p>{children}</p>
-      {sql ? (
-        <pre className="terminal" aria-label="Consulta SQL e resposta do banco">
-          <span className="linha"><span className="prompt" aria-hidden="true">&gt; </span><Sql texto={sql.split('\n')[0]} /></span>
-          {sql.split('\n').slice(1).map((l, i) => <span key={i} className="linha resultado">{l}</span>)}
-          {erro ? <span className="linha erro"><b>ERRO:</b> {erro}</span> : null}
-        </pre>
-      ) : null}
+      <div className="bloqueio-acoes">
+        <Link href="/" className="btn-link">Voltar à visão geral</Link>
+        <Link href="/seguranca" className="btn-link sec">Entender por que não aparece</Link>
+      </div>
     </section>
   );
 }

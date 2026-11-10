@@ -25,9 +25,9 @@ export default async function Auditoria() {
     return (
       <>
         <Cabecalho sobre="Auditoria" titulo="Quem acessou o quê" />
-        <Bloqueio titulo="Só a Diretoria de RH vê o registro de acessos" sql="select * from api.auditoria();" erro={a.motivo}>
-          O seu acesso a esta página também foi negado pelo banco agora. Os seus acessos a dados pessoais, porém,
-          continuam sendo registrados e aparecem para a diretoria.
+        <Bloqueio titulo="Esta tela não está disponível para o seu perfil">
+          O registro de acessos é restrito à Diretoria de RH. Os seus acessos a dados pessoais continuam sendo registrados,
+          e a diretoria pode consultá-los.
         </Bloqueio>
       </>
     );
