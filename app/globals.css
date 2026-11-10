@@ -30,8 +30,9 @@
   color-scheme: light;
 }
 
+/* Tema: automático pelo sistema, ou escolhido no botão (atributo data-theme no <html>). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --bg: #14161c;
     --surface: #1b1e26;
     --surface-2: #232733;
@@ -57,6 +58,32 @@
     --shadow: 0 1px 2px rgb(0 0 0 / .3);
     color-scheme: dark;
   }
+}
+:root[data-theme='dark'] {
+  --bg: #14161c;
+  --surface: #1b1e26;
+  --surface-2: #232733;
+  --ink: #eceef3;
+  --ink-2: #c3c7d2;
+  --muted: #9298a8;
+  --line: #2c3040;
+  --line-2: #383d50;
+  --accent: #8fa8ec;
+  --accent-ink: #10131a;
+  --accent-soft: #263255;
+  --good: #5fc896;
+  --good-soft: #17352a;
+  --warn: #e8a54e;
+  --warn-soft: #3b2c16;
+  --bad: #f08a80;
+  --bad-soft: #3e1f1d;
+  --lock: #b7a6f0;
+  --lock-soft: #2c2645;
+  --c1: #8fa8ec;
+  --c2: #e8915a;
+  --c3: #6b7287;
+  --shadow: 0 1px 2px rgb(0 0 0 / .3);
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -107,6 +134,13 @@ svg { display: block; }
   cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 13px;
 }
 .btn-sair:hover { border-color: var(--ink-2); }
+.btn-tema {
+  border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); border-radius: 9px;
+  width: 34px; height: 32px; display: inline-grid; place-items: center; cursor: pointer; padding: 0;
+}
+.btn-tema:hover { border-color: var(--ink-2); }
+.btn-tema:focus-visible, .btn-sair:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.login-tema { display: flex; justify-content: flex-end; }
 
 .faixa { border-bottom: 1px solid var(--line); background: var(--surface); }
 .faixa-in {

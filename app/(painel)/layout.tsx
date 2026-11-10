@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { LogOut, ShieldCheck } from 'lucide-react';
 import Nav from '@/components/Nav';
+import BotaoTema from '@/components/Tema';
+import { lerTema } from '@/lib/tema';
 import { exigirSessao, NOME_PERFIL } from '@/lib/sessao';
 import { data, dataHora } from '@/lib/formato';
 import { sair } from '../login/acoes';
@@ -9,6 +11,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function LayoutPainel({ children }: { children: React.ReactNode }) {
   const { sessao: s } = await exigirSessao();
+  const tema = await lerTema();
   const itens = [
     { href: '/', rotulo: 'Visão geral' },
     { href: '/pessoas', rotulo: 'Pessoas', bloqueado: !s.pode.individual },
@@ -31,6 +34,7 @@ export default async function LayoutPainel({ children }: { children: React.React
               <b>{s.nome}</b>
               <small>{NOME_PERFIL[s.perfil]}</small>
             </span>
+            <BotaoTema inicial={tema} />
             <form action={sair}>
               <button className="btn-sair" type="submit"><LogOut size={14} aria-hidden="true" />Trocar perfil</button>
             </form>

@@ -1,5 +1,7 @@
 import { AlertCircle, ChevronRight, ShieldCheck } from 'lucide-react';
 import { entrar, entrarComo } from './acoes';
+import BotaoTema from '@/components/Tema';
+import { lerTema } from '@/lib/tema';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +19,7 @@ const ERROS: Record<string, string> = {
 
 export default async function Login({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const sp = await searchParams;
+  const tema = await lerTema();
   const erro = sp.erro ? ERROS[sp.erro] : sp.expirou ? 'Sua sessão expirou. Entre de novo.' : null;
   return (
     <div className="login">
@@ -38,6 +41,7 @@ export default async function Login({ searchParams }: { searchParams: Promise<Re
       </section>
 
       <section className="login-form">
+        <div className="login-tema"><BotaoTema inicial={tema} /></div>
         <h2>Escolha um perfil para entrar</h2>
         {erro ? <p className="erro" role="alert"><AlertCircle size={16} aria-hidden="true" />{erro}</p> : null}
         <div className="perfis">
