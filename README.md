@@ -6,6 +6,8 @@ Turnover, absenteísmo, clima e igualdade salarial de uma empresa fictícia com 
 
 > Projeto de portfólio de **Breno Silva**. Todos os dados são fictícios: nomes sorteados, CPFs propositalmente inválidos, salários e respostas gerados por simulação.
 
+**[Abrir o painel](https://painel-people-analytics.vercel.app)** · entre com qualquer um dos quatro perfis, sem cadastro.
+
 ![Visão geral](docs/img/visao-geral.png)
 
 ## A pergunta

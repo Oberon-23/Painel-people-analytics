@@ -1,6 +1,6 @@
 # Post para o LinkedIn
 
-Imagem: `docs/img/linkedin.png` (1200 × 1200). Troque os dois links antes de publicar.
+Imagem: `docs/img/linkedin.png` (1200 × 1200). Os números são os do site publicado.
 
 ---
 
@@ -9,9 +9,9 @@ Hoje muita gente apresenta dados em HTML. E a pergunta que sempre aparece nos co
 Montei um projeto para responder isso na prática: um painel de RH (turnover, absenteísmo, clima e igualdade salarial) de uma empresa fictícia, em que o banco de dados decide o que cada pessoa vê.
 
 A mesma consulta, sem filtro nenhum, devolve:
-→ 521 registros para a diretora de RH
-→ 342 para o HR Business Partner (só a diretoria dele)
-→ 155 para a gerente (só a equipe dela)
+→ 523 registros para a diretora de RH
+→ 345 para o HR Business Partner (só a diretoria dele)
+→ 158 para a gerente (só a equipe dela)
 → 0 para o analista (que só trabalha com números de grupos)
 
 A tela não esconde nada. Ela simplesmente não recebe.
@@ -28,7 +28,7 @@ O que levo para qualquer painel, seja em HTML ou em Power BI: segurança não é
 
 Stack: PostgreSQL, Next.js e TypeScript. Dados 100% fictícios.
 
-🔗 Teste com os 4 perfis: [LINK DA VERCEL]
+🔗 Teste com os 4 perfis: https://painel-people-analytics.vercel.app
 💻 Código: https://github.com/Oberon-23/painel-people-analytics
 
 #PeopleAnalytics #LGPD #SegurancaDaInformacao #PostgreSQL #AnaliseDeDados
