@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from 'next';
+import '@fontsource-variable/instrument-sans/wght.css';
+import '@fontsource-variable/newsreader/opsz.css';
 import './globals.css';
+import './refino.css';
 import { lerTema } from '@/lib/tema';
 
 export const metadata: Metadata = {

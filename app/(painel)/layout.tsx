@@ -22,6 +22,7 @@ export default async function LayoutPainel({ children }: { children: React.React
   ];
   return (
     <>
+      <a className="pular" href="#conteudo">Pular para o conteúdo</a>
       <header className="topo">
         <div className="topo-in">
           <Link href="/" className="marca">
@@ -49,7 +50,7 @@ export default async function LayoutPainel({ children }: { children: React.React
           <Link href="/seguranca">O que você pode ver e por quê</Link>
         </div>
       </div>
-      <main>{children}</main>
+      <main id="conteudo" tabIndex={-1}>{children}</main>
       <footer className="rodape">
         Rotalume é uma empresa fictícia. Nomes, CPFs (propositalmente inválidos), salários e respostas foram gerados por
         sorteio. Projeto de portfólio de Breno Silva.

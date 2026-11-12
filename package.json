@@ -12,6 +12,8 @@
     "db:sql": "bash scripts/montar-sql.sh"
   },
   "dependencies": {
+    "@fontsource-variable/instrument-sans": "^5.3.0",
+    "@fontsource-variable/newsreader": "^5.3.0",
     "lucide-react": "^0.577.0",
     "next": "^16.4.5",
     "pg": "^8.23.1",
