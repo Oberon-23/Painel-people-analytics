@@ -8,7 +8,13 @@ Turnover, absenteísmo, clima e igualdade salarial de uma empresa fictícia com 
 
 **[Abrir o painel](https://painel-people-analytics.vercel.app)** · entre com qualquer um dos quatro perfis, sem cadastro.
 
-![Visão geral](docs/img/visao-geral.png)
+## Em 30 segundos
+
+- **Problema:** painel de RH em página HTML costuma trazer todos os dados e só filtrar na tela. Quem abre o código-fonte vê salário e CPF de todo mundo.
+- **O que fiz:** Next.js na frente e PostgreSQL decidindo o que sai, com permissão por linha (RLS), máscara de coluna por perfil, grupos com menos de 5 pessoas ocultos e registro de todo acesso a dado pessoal.
+- **Como sei que funciona:** uma página roda ao vivo 11 tentativas de burlar as regras, e todas são barradas ou filtradas pelo banco. São 21 testes contra um PostgreSQL real a cada envio.
+
+![Demonstração: a diretora vê a lista de pessoas; o analista entra no mesmo painel e a lista não chega até ele](docs/img/demo.gif)
 
 ## A pergunta
 
